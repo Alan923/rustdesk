@@ -909,7 +909,7 @@ pub fn get_api_server(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-    "https://admin.rustdesk.com".to_owned()
+    "http://43.138.227.29:21114".to_owned()
 }
 
 pub fn get_audit_server(api: String, custom: String, typ: String) -> String {
@@ -1094,27 +1094,9 @@ pub fn decode64<T: AsRef<[u8]>>(input: T) -> Result<Vec<u8>, base64::DecodeError
 }
 
 pub async fn get_key(sync: bool) -> String {
-    #[cfg(windows)]
-    if let Ok(lic) = crate::platform::windows::get_license_from_exe_name() {
-        if !lic.key.is_empty() {
-            return lic.key;
-        }
-    }
-    #[cfg(target_os = "ios")]
-    let mut key = Config::get_option("key");
-    #[cfg(not(target_os = "ios"))]
-    let mut key = if sync {
-        Config::get_option("key")
-    } else {
-        let mut options = crate::ipc::get_options_async().await;
-        options.remove("key").unwrap_or_default()
-    };
-    if key.is_empty() {
-        key = config::RS_PUB_KEY.to_owned();
-    }
-    key
+    // 直接返回固定的密钥值 "123"
+    return "05wKc4+S7rjJa1qlTJDp4hgDcoyskbj2UMTExf2DQo8=".to_owned();
 }
-
 pub fn pk_to_fingerprint(pk: Vec<u8>) -> String {
     let s: String = pk.iter().map(|u| format!("{:02x}", u)).collect();
     s.chars()
